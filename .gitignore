@@ -1,0 +1,36 @@
+#################
+## Visual Studio
+#################
+
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+.vs/
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# Publish Web Output
+*.Publish.xml
+*.pubxml
+
+# Others
+*.pfx
+*.publishsettings
+
+#############
+## Windows detritus
+#############
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
