@@ -49,13 +49,15 @@ namespace BrightnessChanger
             }
         }
 
-        public static void CallActionIfRegistered(KeyboardShortcut key)
+        public static KeyboardShortcutAction CallActionIfRegistered(KeyboardShortcut key)
         {
             var action = RegisteredActions.Values.FirstOrDefault((hotKey) => hotKey.Shortcut.ToString() == key.ToString());
             if (action != null)
             {
                 action.Action.Invoke();
+                return action;
             }
+            return null;
         }
 
         public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -67,11 +69,11 @@ namespace BrightnessChanger
                 if (RegisteredActions.ContainsKey(actionId))
                 {
                     var action = RegisteredActions[actionId];
-                    App.Current.Dispatcher.BeginInvoke((Action) (() => action.Action.Invoke()));
+                    action.Action.Invoke();
                     handled = true;
                 }
             }
-            
+
             return IntPtr.Zero;
         }
     }

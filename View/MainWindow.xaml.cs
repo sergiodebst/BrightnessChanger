@@ -44,6 +44,7 @@ namespace BrightnessChanger
         {
             base.OnDeactivated(e);
             KeyboardManager.EnableSystemKeys();
+            WindowsManager.StartMonitoringActiveAppChangesIfNeeded();
         }
 
         protected override void OnClosing(CancelEventArgs e)

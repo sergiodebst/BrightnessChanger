@@ -23,7 +23,7 @@ namespace BrightnessChanger
 
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, ref KBHookStruct lParam);
         private static LowLevelKeyboardProc _handler;
-        private static IntPtr CurrentHook =IntPtr.Zero;
+        private static IntPtr CurrentHook = IntPtr.Zero;
         private static IEnumerable<IHandleKeyboardHookControl> HandlerControls;
         private const int WH_KEYBOARD_LL = 13;
 
@@ -40,17 +40,20 @@ namespace BrightnessChanger
 
         public static void DisableSystemKeys(IEnumerable<IHandleKeyboardHookControl> controls)
         {
-            // Note: This does not work in the VS host environment.  To run in debug mode:
-            // Project -> Properties -> Debug -> Uncheck "Enable the Visual Studio hosting process"
-            IntPtr hInstance = Marshal.GetHINSTANCE(App.Current.GetType().Module);
-            HandlerControls = controls;
-            _handler = new LowLevelKeyboardProc(KeyboardHookHandler);
-            CurrentHook = SetWindowsHookEx(WH_KEYBOARD_LL, _handler, hInstance, 0);
+            if (CurrentHook == IntPtr.Zero)
+            {
+                // Note: This does not work in the VS host environment.  To run in debug mode:
+                // Project -> Properties -> Debug -> Uncheck "Enable the Visual Studio hosting process"
+                IntPtr hInstance = Marshal.GetHINSTANCE(App.Current.GetType().Module);
+                HandlerControls = controls;
+                _handler = new LowLevelKeyboardProc(KeyboardHookHandler);
+                CurrentHook = SetWindowsHookEx(WH_KEYBOARD_LL, _handler, hInstance, 0);
+            }
         }
 
         public static void EnableSystemKeys()
         {
-            if(CurrentHook != IntPtr.Zero)
+            if (CurrentHook != IntPtr.Zero)
             {
                 UnhookWindowsHookEx(CurrentHook);
                 HandlerControls = null;
@@ -65,16 +68,15 @@ namespace BrightnessChanger
             {
                 var wpfKey = KeyInterop.KeyFromVirtualKey(lParam.vkCode);
                 var wparamTyped = wParam.ToInt32();
-                
                 if (Enum.IsDefined(typeof(KeyboardState), wparamTyped))
                 {
                     var isKeyDown = false;
-                    if (wparamTyped == (int)KeyboardState.WM_KEYDOWN || wparamTyped == (int) KeyboardState.WM_SYSKEYDOWN)
+                    if (wparamTyped == (int)KeyboardState.WM_KEYDOWN || wparamTyped == (int)KeyboardState.WM_SYSKEYDOWN)
                     {
                         isKeyDown = true;
-                        CurrentlyPressedKeys.Add(wpfKey);
+                        if (!CurrentlyPressedKeys.Contains(wpfKey)) CurrentlyPressedKeys.Add(wpfKey);
                     }
-                    else if(CurrentlyPressedKeys.Contains(wpfKey)) 
+                    else if (CurrentlyPressedKeys.Contains(wpfKey))
                     {
                         CurrentlyPressedKeys.Remove(wpfKey);
                     }
@@ -83,17 +85,17 @@ namespace BrightnessChanger
                         var aaa = wparamTyped;
                     }
 
+                    var key = new KeyboardShortcut(wpfKey)
+                    {
+                        CtrlModifier = CurrentlyPressedKeys.Contains(Key.LeftCtrl) || CurrentlyPressedKeys.Contains(Key.LeftCtrl),
+                        ShiftModifier = CurrentlyPressedKeys.Contains(Key.LeftShift) || CurrentlyPressedKeys.Contains(Key.RightShift),
+                        AltModifier = CurrentlyPressedKeys.Contains(Key.LeftAlt) || CurrentlyPressedKeys.Contains(Key.RightAlt),
+                        WinModifier = CurrentlyPressedKeys.Contains(Key.LWin) || CurrentlyPressedKeys.Contains(Key.RWin)
+                    };
+                    var keyEvent = new KeyEvent(key);
 
                     if (HandlerControls != null)
                     {
-                        var key = new KeyboardShortcut(wpfKey)
-                        {
-                            CtrlModifier = CurrentlyPressedKeys.Contains(Key.LeftCtrl) || CurrentlyPressedKeys.Contains(Key.LeftCtrl),
-                            ShiftModifier = CurrentlyPressedKeys.Contains(Key.LeftShift) || CurrentlyPressedKeys.Contains(Key.RightShift),
-                            AltModifier = CurrentlyPressedKeys.Contains(Key.LeftAlt) || CurrentlyPressedKeys.Contains(Key.RightAlt),
-                            WinModifier = CurrentlyPressedKeys.Contains(Key.LWin) || CurrentlyPressedKeys.Contains(Key.RWin)
-                        };
-                        var keyEvent = new KeyEvent(key);
                         foreach (var control in HandlerControls)
                         {
                             if (control.CanHandleHook)
@@ -102,16 +104,20 @@ namespace BrightnessChanger
                                 if (keyEvent.Handled) break;
                             }
                         }
-                        if (!keyEvent.Handled && !isKeyDown)
-                        {
-                            HotKeyManager.CallActionIfRegistered(key);
-                        }
                     }
-                    return new IntPtr(1);
-                }
 
+                    if (keyEvent.Handled)
+                    {
+                        return new IntPtr(1);
+                    }
+                    else if (!keyEvent.Handled && isKeyDown)
+                    {
+                        KeyboardShortcutAction action = HotKeyManager.CallActionIfRegistered(key);
+                        if (action != null) return new IntPtr(1);
+                    }
+                }
             }
-            
+
             return CallNextHookEx(CurrentHook, nCode, wParam, ref lParam);
         }
 

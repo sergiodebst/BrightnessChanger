@@ -68,6 +68,7 @@
     <Compile Include="Static\BrightnessManager.cs" />
     <Compile Include="Static\HotKeyManager.cs" />
     <Compile Include="Static\KeyboardManager.cs" />
+    <Compile Include="Static\WindowsManager.cs" />
     <Compile Include="View\Controls\IHandleKeyboardHookControl.cs" />
     <Compile Include="View\Controls\KeyboardShortcutBox.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
