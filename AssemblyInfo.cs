@@ -37,9 +37,8 @@ using System.Windows;
                                      // ni diccionarios de recursos de la aplicación)
     ResourceDictionaryLocation.SourceAssembly //donde se encuentra el diccionario de recursos genérico
                                               //(se utiliza si no se encuentra ningún recurso en la página,
-                                              // aplicación o diccionarios de recursos específicos del tema)
 )]
-
+[assembly: Guid("AF7F88B9-FABD-427C-BAB4-1E08190A59F2")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //
