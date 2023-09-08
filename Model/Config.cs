@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Input;
+using debstDevelopments.HotKeyManager;
 
 namespace BrightnessChanger
 {
@@ -56,8 +57,8 @@ namespace BrightnessChanger
 
         public void Apply()
         {
-            if (this.BrightUpShortcut != null) HotKeyManager.Register(new KeyboardShortcutAction(App.BRIGHT_UP_HOTKEY_ID, this.BrightUpShortcut, BrightnessManager.BrightUp));
-            if (this.BrightDownShortcut != null) HotKeyManager.Register(new KeyboardShortcutAction(App.BRIGHT_DOWN_HOTKEY_ID, this.BrightDownShortcut, BrightnessManager.BrightDown));
+            if (this.BrightUpShortcut != null) HotKeyManager.RegisterHotKey(App.Handler, new KeyboardShortcutAction(App.BRIGHT_UP_HOTKEY_ID, this.BrightUpShortcut, BrightnessManager.BrightUp));
+            if (this.BrightDownShortcut != null) HotKeyManager.RegisterHotKey(App.Handler, new KeyboardShortcutAction(App.BRIGHT_DOWN_HOTKEY_ID, this.BrightDownShortcut, BrightnessManager.BrightDown));
         }
 
         public void Save()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using debstDevelopments.HotKeyManager;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -37,13 +38,13 @@ namespace BrightnessChanger
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
-            KeyboardManager.DisableSystemKeys(this.VisualTreeChildren<IHandleKeyboardHookControl>().ToList());
+            KeyboardManager.StartKeyboardHook(typeof(App).Module, this.VisualTreeChildren<IKeyboardHookHandler>().ToList());
         }
 
         protected override void OnDeactivated(EventArgs e)
         {
             base.OnDeactivated(e);
-            KeyboardManager.EnableSystemKeys();
+            KeyboardManager.StopKeyboardHook();
             WindowsManager.StartMonitoringActiveAppChangesIfNeeded();
         }
 

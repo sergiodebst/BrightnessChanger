@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrightnessChanger"
+        xmlns:debsthkmcontrols="clr-namespace:debstDevelopments.HotKeyManager.View.Controls;assembly=debstDevelopments.HotKeyManager"
         mc:Ignorable="d"
         Icon="pack://application:,,,/BrightnessChanger;component/Resources/brightness_icon.png"
         Title="Brightness changer"
@@ -22,8 +23,8 @@
         <Label Grid.Row="1" Content="Bright up hotkey:" VerticalAlignment="Center" />
         
 
-        <local:KeyboardShortcutBox Grid.Row="0" Grid.Column="1" KeyboardShortcut="{Binding BrightDownShortcut, Mode=TwoWay}" Margin="5" />
-        <local:KeyboardShortcutBox Grid.Row="1" Grid.Column="1" KeyboardShortcut="{Binding BrightUpShortcut, Mode=TwoWay}" Margin="5" />
+        <debsthkmcontrols:KeyboardShortcutBox Grid.Row="0" Grid.Column="1" KeyboardShortcut="{Binding BrightDownShortcut, Mode=TwoWay}" Margin="5" />
+        <debsthkmcontrols:KeyboardShortcutBox Grid.Row="1" Grid.Column="1" KeyboardShortcut="{Binding BrightUpShortcut, Mode=TwoWay}" Margin="5" />
         <Button Grid.Row="2" Grid.Column="1" Content="Save" Command="{Binding SaveCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Padding="5"/>
         <local:NotifyIcon Text="Volume switch" Icon="pack://application:,,,/BrightnessChanger;component/Resources/brightness_icon.png" IconVisibility="Visible" Command="{Binding OpenConfigurationCommand}">
             <local:NotifyIcon.ContextMenu>

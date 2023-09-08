@@ -18,9 +18,9 @@
 	  <None Remove="Resources\brightness_icon.png" />
 	</ItemGroup>
 	<ItemGroup>
-		<Reference Include="debstDevelopments.HotKeyManager">
-		  <HintPath>..\debstDevelopments\debstDevelopments.HotKeyManager\debstDevelopments.HotKeyManager\bin\Release\debstDevelopments.HotKeyManager.dll</HintPath>
-		</Reference>
+	  <PackageReference Include="debstDevelopments.HotKeyManager" Version="1.0.0" />
+	</ItemGroup>
+	<ItemGroup>
 		<Reference Include="Microsoft.CSharp" />
 		<Reference Include="System.Management" />
 		<Reference Include="WindowsBase" />

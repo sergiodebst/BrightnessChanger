@@ -18,7 +18,6 @@ namespace BrightnessChanger
         public const int BRIGHT_DOWN_HOTKEY_ID = 73677;
 
         private static WindowInteropHelper Interop;
-        private static HwndSource HwndSource;
         public static IntPtr Handler
         {
             get { return Interop.Handle; }
@@ -27,19 +26,12 @@ namespace BrightnessChanger
         public static void RegisterWindow(MainWindow w)
         {
             Interop = new WindowInteropHelper(w);
-            HwndSource = HwndSource.FromHwnd(Handler);
-            HwndSource.AddHook(HotKeyManager.HwndHook);
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            if (HwndSource != null)
-            {
-                HwndSource.RemoveHook(HotKeyManager.HwndHook);
-                HwndSource = null;
-                HotKeyManager.UnregisterAll();
-            }
+            debstDevelopments.HotKeyManager.HotKeyManager.UnregisterAllHotKeys(Handler);
         }
     }
 }
